@@ -45,6 +45,8 @@ if __name__ == '__main__':
     err = evaluerModele(poly, x_sel)
     print "Xsel : %.06f" % err
 
+    fp = open("test.out", 'w')
+
     for i in range(10, 81, 5):
         x_test = x_train[len(x_train)-i:]
         w = entrainerModele(x_test, 3)
@@ -53,9 +55,10 @@ if __name__ == '__main__':
         err = evaluerModele(poly, x_sel)
         print "E_emp[%d] : %.06f" % (i, err)
 
-        err = evaluerModele(poly, x_test)
-        print "E_gen[%d] : %.06f" % (i, err)
-
+        err2 = evaluerModele(poly, x_test)
+        print "E_gen[%d] : %.06f" % (i, err2)
+        fp.write(("%d\t%0.6f\t%0.6f\n" % (i, err, err2)).replace('.', ','))
+    fp.close()
     print ""
     print "Inflience de l'ordre de regression"
 
@@ -65,12 +68,28 @@ if __name__ == '__main__':
 
     x_test = data.points[80:]
 
+    e_emp = []
+    e_gen = []
+
+    degs = []
+
+    fp = open('test2.out', 'w')
+
     for deg in range(21):
+        degs.append(deg)
         w = entrainerModele(x_train, deg)
 
         poly = numpy.poly1d(w)
         err = evaluerModele(poly, x_train)
         print "E_emp[%d] : %0.6f" % (deg, err)
+        e_emp.append(err)
+        err2 = evaluerModele(poly, x_valid)
+        print "E_gen[%d] : %0.6f" % (deg, err2)
+        e_gen.append(err2)
 
-        err = evaluerModele(poly, x_valid)
-        print "E_gen[%d] : %0.6f" % (deg, err)
+        fp.write(("%d\t%0.6f\t%0.6f\n" % (deg, err, err2)).replace('.', ','))
+
+    fp.close()
+    #import matplotlib.pyplot as plot
+    #plot.plot(degs, e_emp, 'b.', degs, e_gen, "g.")
+    #plot.show()
