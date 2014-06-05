@@ -31,7 +31,7 @@ def evaluerModele(p, x_sel):
     for pt in x_sel:
         p_y = numpy.polyval(p, pt.x)
         #print p_y
-        sum += math.pow(p_y - pt.y, 2)
+        sum += math.pow(pt.y - p_y, 2)
 
     return sum/n
 
@@ -50,5 +50,27 @@ if __name__ == '__main__':
         w = entrainerModele(x_test, 3)
 
         poly = numpy.poly1d(w)
+        err = evaluerModele(poly, x_sel)
+        print "E_emp[%d] : %.06f" % (i, err)
+
         err = evaluerModele(poly, x_test)
-        print "Xtest[%d] : %.06f" % (i, err)
+        print "E_gen[%d] : %.06f" % (i, err)
+
+    print ""
+    print "Inflience de l'ordre de regression"
+
+    x_train = data.points[0:60]
+
+    x_valid = data.points[60:80]
+
+    x_test = data.points[80:]
+
+    for deg in range(21):
+        w = entrainerModele(x_train, deg)
+
+        poly = numpy.poly1d(w)
+        err = evaluerModele(poly, x_train)
+        print "E_emp[%d] : %0.6f" % (deg, err)
+
+        err = evaluerModele(poly, x_valid)
+        print "E_gen[%d] : %0.6f" % (deg, err)
