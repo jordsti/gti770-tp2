@@ -1,11 +1,14 @@
-
+class point:
+    def __init__(self, x=0.000000, y=0.000000):
+        self.x = x
+        self.y = y
 
 class dataset:
 
     def __init__(self, filename = 'dataset.txt'):
 
         self.filename = filename
-
+        self.points = []
 
     def load(self):
 
@@ -17,11 +20,15 @@ class dataset:
 
         data = text.split(' ')
 
-        for d in data:
+        i = 0
 
-            #print d
-            fl = float(d)
-            print fl
+        while i < len(data):
+            pt = point()
+            pt.x = float(data[i])
+            pt.y = float(data[i+1])
+            self.points.append(pt)
+            i += 2
+
 
 
 if __name__ == '__main__':
@@ -29,4 +36,7 @@ if __name__ == '__main__':
     dt = dataset()
 
     dt.load()
+
+    for p in dt.points:
+        print p.x, p.y
     
