@@ -34,7 +34,7 @@ def entrainerModele(pts, deg=0):
         a_x.append(p.x)
         a_y.append(p.y)
 
-    w = numpy.polynomial.polynomial.polyfit(a_x, a_x, deg)
+    w = numpy.polynomial.polynomial.polyfit(a_x, a_y, deg)
 
     return w
 
@@ -63,10 +63,11 @@ if __name__ == '__main__':
     fp = open("test.out", 'w')
 
     for i in range(10, 81, 5):
-        x_train = shuffle(x_train)
-        x_test = x_train[len(x_train)-i:]
+        x_sel = shuffle(data.points)
+        x_sel = x_train[0:i]
+        #x_test = x_train[len(x_train)-i:]
 
-        w = entrainerModele(x_test, 3)
+        w = entrainerModele(x_train, 3)
 
         poly = numpy.poly1d(w)
         err = evaluerModele(poly, x_sel)
@@ -98,10 +99,10 @@ if __name__ == '__main__':
         w = entrainerModele(x_train, deg)
 
         poly = numpy.poly1d(w)
-        err = evaluerModele(poly, x_train)
+        err = evaluerModele(poly, x_valid)
         print "E_emp[%d] : %0.6f" % (deg, err)
         e_emp.append(err)
-        err2 = evaluerModele(poly, x_valid)
+        err2 = evaluerModele(poly, x_test)
         print "E_gen[%d] : %0.6f" % (deg, err2)
         e_gen.append(err2)
 
@@ -114,12 +115,9 @@ if __name__ == '__main__':
 
 
     #test p*
-
-    fp = open('test3.out', 'w')
-
     #meilleur ordre est 1
     w = entrainerModele(x_train, 1)
     poly = numpy.poly1d(w)
 
-    err = evaluerModele(poly, x_train)
+    err = evaluerModele(poly, x_test)
     print err
