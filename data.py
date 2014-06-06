@@ -1,3 +1,4 @@
+__author__ = 'Jordan Guerin'
 class point:
     def __init__(self, x=0.000000, y=0.000000):
         self.x = x

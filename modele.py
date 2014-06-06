@@ -1,4 +1,4 @@
-__author__ = 'JordSti'
+__author__ = 'Jordan Guerin'
 import numpy
 import math
 from data import dataset
@@ -60,7 +60,7 @@ if __name__ == '__main__':
         fp.write(("%d\t%0.6f\t%0.6f\n" % (i, err, err2)).replace('.', ','))
     fp.close()
     print ""
-    print "Inflience de l'ordre de regression"
+    print "Influence de l'ordre de regression"
 
     x_train = data.points[0:60]
 
@@ -90,6 +90,18 @@ if __name__ == '__main__':
         fp.write(("%d\t%0.6f\t%0.6f\n" % (deg, err, err2)).replace('.', ','))
 
     fp.close()
-    #import matplotlib.pyplot as plot
+    import matplotlib.pyplot as plot
     #plot.plot(degs, e_emp, 'b.', degs, e_gen, "g.")
     #plot.show()
+
+
+    #test p*
+
+    fp = open('test3.out', 'w')
+
+    #meilleur ordre est 1
+    w = entrainerModele(x_train, 1)
+    poly = numpy.poly1d(w)
+
+    err = evaluerModele(poly, x_train)
+    print err
