@@ -1,6 +1,7 @@
 __author__ = 'Jordan Guerin'
 import numpy
 import math
+import random
 from data import dataset
 
 data = dataset()
@@ -9,6 +10,20 @@ data.load()
 x_train = data.points[0:80]
 #x_valid = data.points[60:80]
 x_test = data.points[80:]
+
+def shuffle(pts, nb=100):
+
+    i1 = random.randint(0, len(pts)-1)
+    i2 = random.randint(0, len(pts)-1)
+
+    pt1 = pts[i1]
+    pt2 = pts[i2]
+
+    pts[i2] = pt1
+    pts[i1] = pt2
+
+    return pts
+
 
 def entrainerModele(pts, deg=0):
 
@@ -38,7 +53,7 @@ def evaluerModele(p, x_sel):
 
 if __name__ == '__main__':
     print "Influence du nombre de donnee"
-    x_sel = x_train[0:10]
+    x_sel = shuffle(x_train)[0:10]
 
     w = entrainerModele(x_sel, 3)
     poly = numpy.poly1d(w)
@@ -48,7 +63,9 @@ if __name__ == '__main__':
     fp = open("test.out", 'w')
 
     for i in range(10, 81, 5):
+        x_train = shuffle(x_train)
         x_test = x_train[len(x_train)-i:]
+
         w = entrainerModele(x_test, 3)
 
         poly = numpy.poly1d(w)
@@ -76,6 +93,7 @@ if __name__ == '__main__':
     fp = open('test2.out', 'w')
 
     for deg in range(21):
+
         degs.append(deg)
         w = entrainerModele(x_train, deg)
 
@@ -90,7 +108,7 @@ if __name__ == '__main__':
         fp.write(("%d\t%0.6f\t%0.6f\n" % (deg, err, err2)).replace('.', ','))
 
     fp.close()
-    import matplotlib.pyplot as plot
+    #import matplotlib.pyplot as plot
     #plot.plot(degs, e_emp, 'b.', degs, e_gen, "g.")
     #plot.show()
 
